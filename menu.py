@@ -1,67 +1,47 @@
-from .logic import get_balance, deposit, withdraw, get_statement
+from .logic import get_computer_choice, determine_winner
 
-def display_menu():
-    print("\n" + "=" * 50)
-    print(" 🏦 SECURE ATM SYSTEM ".center(50))
-    print("=" * 50)
-    print("  [1] Display Balance")
-    print("  [2] Deposit Money")
-    print("  [3] Withdraw Money")
-    print("  [4] View Statement")
-    print("  [0] Exit / Take Card")
-    print("=" * 50)
+def display_main_menu():
+    """Prints the main menu options."""
+    print("\n" + "="*30)
+    print(" STONE - PAPER - SCISSORS ")
+    print("="*30)
+    print("1. Play a Round")
+    print("2. Exit")
+    print("="*30)
 
-def handle_balance():
-    print("\n--- CURRENT BALANCE ---")
-    print(f" Available Balance: Rs. {get_balance():.2f}")
-
-def handle_deposit():
-    print("\n--- DEPOSIT MONEY ---")
-    try:
-        amount = float(input(" ➤ Enter amount to deposit: Rs. "))
-        success, msg = deposit(amount)
-        print(f"\n {'[✓]' if success else '[!]'} {msg}")
-    except ValueError:
-        print("\n [!] Invalid input. Please enter numbers only.")
-
-def handle_withdraw():
-    print("\n--- WITHDRAW MONEY ---")
-    try:
-        amount = float(input(" ➤ Enter amount to withdraw: Rs. "))
-        success, msg = withdraw(amount)
-        print(f"\n {'[✓]' if success else '[!]'} {msg}")
-    except ValueError:
-        print("\n [!] Invalid input. Please enter numbers only.")
-
-def handle_statement():
-    print("\n" + " TRANSACTION STATEMENT ".center(50, "-"))
-    transactions = get_statement()
+def play_round():
+    """Handles the interaction for a single round."""
+    print("\nChoose your weapon:")
+    print("1. Stone")
+    print("2. Paper")
+    print("3. Scissors")
     
-    if not transactions:
-        print(" No transactions yet.")
+    user_input = input("Enter 1, 2, or 3: ")
+    choices_map = {'1': 'Stone', '2': 'Paper', '3': 'Scissors'}
+    
+    if user_input in choices_map:
+        user_choice = choices_map[user_input]
+        computer_choice = get_computer_choice()
+        
+        print(f"\n> You chose:      {user_choice}")
+        print(f"> Computer chose: {computer_choice}")
+        
+        # Calculate and show the result
+        result = determine_winner(user_choice, computer_choice)
+        print(f"\n*** {result} ***")
     else:
-        for idx, transaction in enumerate(transactions, 1):
-            print(f" {idx:02d} | {transaction}")
-            
-    print("-" * 50)
-    print(f" Current Balance: Rs. {get_balance():.2f}")
+        print("\nInvalid choice. Please enter a valid number.")
 
 def start_application():
-    """The infinite loop driving the ATM interface."""
+    """The infinite loop driving the menu system."""
     while True:
-        display_menu()
-        choice = input(" ➤ Select an option (0-4): ").strip()
-        
+        display_main_menu()
+        choice = input("Select an option (1-2): ")
+
         if choice == '1':
-            handle_balance()
+            play_round()
         elif choice == '2':
-            handle_deposit()
-        elif choice == '3':
-            handle_withdraw()
-        elif choice == '4':
-            handle_statement()
-        elif choice == '0':
-            print("\n Transaction complete. Please take your card. Goodbye!\n")
+            print("\nExiting the game. Thanks for playing!")
             break
         else:
-            print("\n [!] Invalid selection. Please choose a number between 0 and 4.")
+            print("\nInvalid input. Please type 1 or 2.")
